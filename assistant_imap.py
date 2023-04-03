@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('1', '0', '0')
+__version_info__ = ('1', '0', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -138,7 +138,7 @@ def imap_search_uids(imap, period):
 def waiting_for_confirmation(msg=''):
     cprint(msg, end='')
     command = input('')
-    if command != 'Y':
+    if command.lower() != 'y':
         raise err.RefusalToMoveError(f'Отмена! Перемещение не подтверждено') from None
 
 
