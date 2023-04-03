@@ -1,0 +1,40 @@
+# System
+Thumbs.db
+*.bak
+
+# Venv
+/env/
+/env2/
+/venv/
+
+# Configs
+/configs/*
+!/configs/config_example.py
+
+# Project dirs
+**/__pycache__/
+/zAssistantIMAP_development/*
+/screenshots/*
+# /.vscode/
+
+# Project files
+
+# Simlinks
+
+# Log files
+/logs/
+
+# Other files
+*_old*
+*_backup*
+Очистка_компил_py3.bat
+*.png
+*.jpg
+*.webm
+*.mp4
+*.mkv
+*.mp3
+*.m4a
+*.exe
+!/zAssistantIMAP_development/AssistantIMAP_description.txt
+!/screenshots/*_screenshot_*.png

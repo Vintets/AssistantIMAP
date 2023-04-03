@@ -1,0 +1,59 @@
+
+# расположение
+#WIN#
+cd /d %YandexDisk%\_Projects\AssistantIMAP
+
+# запуск
+python3 %YandexDisk%\_Projects\AssistantIMAP\assistant_imap.py
+
+
+# ==================================================================================================
+            *** Git ***
+
+Проект AssistantIMAP
+    cd "$YandexDisk/_Projects/AssistantIMAP"
+    git remote add origin git@bitbucket.org:Vintets/AssistantIMAP.git
+    git remote set-url origin --add git@github.com:Vintets/AssistantIMAP.git
+
+    git it
+    git push -u origin master
+    git push origin master
+
+
+# ==================================================================================================
+            *** flake8 ***
+
+cd /d %YandexDisk%\_Projects\AssistantIMAP
+
+flake8
+flake8 assistant_imap.py
+flake8 D:\YandexDisk\_Projects\AssistantIMAP\assistant_imap.py
+
+# noqa
+
+
+# ==================================================================================================
+            *** Анализ ***
+
+RFC 3501    IMAPv4
+https://datatracker.ietf.org/doc/html/rfc3501#page-51
+
+(\HasNoChildren \Unmarked) "|" "&BB0ENQQ2BDUEOwQwBEIENQQ7BEwEPQQwBE8- &BD8EPgRHBEIEMA-"
+(\HasNoChildren \Marked \Sent) "|" "&BB4EQgQ,BEAEMAQyBDsENQQ9BD0ESwQ1-"
+(\HasNoChildren \Unmarked) "|" "&BBIERQQ+BDQETwRJBDgENQ-_2022"
+(\HasNoChildren \Unmarked) "|" "&BBgEQQRFBD4ENARPBEkEOAQ1-"
+(\HasNoChildren \Unmarked \Junk) "|" "&BCEEPwQwBDw-"
+(\HasNoChildren \Unmarked \Trash) "|" "&BCMENAQwBDsENQQ9BD0ESwQ1-"
+(\HasChildren \Marked \Drafts) "|" "&BCcENQRABD0EPgQyBDgEOgQ4-"
+(\HasNoChildren \Unmarked \Templates) "|" "&BCcENQRABD0EPgQyBDgEOgQ4-|template"
+(\HasNoChildren \Marked \NoInferiors) "|" INBOX
+(\HasNoChildren \Marked) "|" beget
+
+
+imap.fetch(b'19', "(BODY[HEADER.FIELDS (Subject)])")
+
+
+// *************************************************************************************************
+# ==================================================================================================
+#‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡‡
+
