@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('1', '3', '1')
+__version_info__ = ('2', '0', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -169,10 +169,16 @@ def show_all_mail_info(imap, uids):
         show_info_msg(imap, uid=uid)
 
 
-def move_emails(imap, uids, target_folder=None):
+def move_emails(imap, uids, folders=None, from_folder=None, target_folder=None):
     # run_uids = (uids[-1], uids[-2])  # for test. Only first and last
     run_uids = uids
-    move_msg_uid(imap, run_uids, target_folder)
+    logger.info(f'Запуск перемещения {len(run_uids)} писем из {from_folder} в {target_folder}')
+    try:
+        move_msg_uid(imap, run_uids, folders[target_folder][0])
+    except imap.error as e:
+        raise err.MoveEmailsError(f'Ошибка перемещения {e}') from None
+    else:
+        logger.success('Письма успешно перемещены!')
 
 
 def imap_session(imap,
@@ -191,14 +197,14 @@ def imap_session(imap,
     # uids = get_uids(imap, criterion='UNSEEN')  # только непрочитанные
     uids = imap_search_uids(imap, period)
     cprint(f'0Найдено писем ^14_{len(uids)}')
-    print(uids)
+    # print(uids)
 
     waiting_for_confirmation(msg='5Для переноса писем введите ^9_Y : ')
 
-    show_first_last_mail_info(imap, uids)
+    # show_first_last_mail_info(imap, uids)
     # show_all_mail_info(imap, uids)
 
-    move_emails(imap, uids, target_folder=folders[target_folder][0])
+    move_emails(imap, uids, folders=folders, from_folder=from_folder, target_folder=target_folder)
 
 
 def main():
@@ -236,7 +242,7 @@ if __name__ == '__main__':
     except (err.ParseStrDateError, err.InvalidFolderNameError, err.AuthenticationError) as e:
         logger.critical(e)
         exit_from_program(code=1, close=config.CLOSECONSOLE)
-    except err.RefusalToMoveError as e:
+    except (err.RefusalToMoveError, err.MoveEmailsError) as e:
         logger.log('FAIL', e)
         exit_from_program(code=0, close=config.CLOSECONSOLE)
     except KeyboardInterrupt:
