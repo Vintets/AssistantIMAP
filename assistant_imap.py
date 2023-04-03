@@ -99,6 +99,42 @@ def parse_strdates():
     return d_start, d_end
 
 
+def imap_session(imap,
+                 from_folder=None, target_folder=None,
+                 period=None):
+    date_start_dt, date_end_dt = period
+    status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)
+    print(status_login)
+    status, folders = imap.list()
+    for folder in folders:
+        # print(folder.decode())
+        # folder_utf8 = imaputf7decode(folder.decode())
+        folder_utf8 = imap_utf7.decode(folder)
+        folder_list = folder_utf8.split(' "|" ')
+        name = folder_list[-1].replace('"', '')
+        print(f'{name:<24}', folder_list[0])
+    try:
+        status, inbox = imap.select(from_folder)
+    except UnicodeEncodeError:
+        raise err.InvalidFolderNameError(f'Папка "{config.FROM_FOLDER}" не найдена') from None
+    inbox_count = inbox[0].decode()
+    print(f'Входящие {inbox_count}')
+
+    # ids = get_all_ids(imap)
+    # uids = get_uids(imap)  # All uids
+    # uids = get_uids(imap, criterion='UNSEEN')  # только непрочитанные
+    uids = get_uids(imap, criterion='SINCE 01-Feb-2023 BEFORE 01-Mar-2023')
+
+    print(f'Найдено писем {len(uids)} {uids}')
+
+    show_info_msg(imap, uid=uids[0])
+    show_info_msg(imap, uid=uids[-1])
+    #for uid in uids:
+        #show_info_msg(imap, uid=uid)
+
+    # move_msg(imap, (ids[-1], ids[-2]), target_folder)
+    # move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
+
 def main():
     from_folder = init_from_folder()
     target_folder = imap_utf7.encode(config.TARGET_FOLDER)
@@ -107,37 +143,10 @@ def main():
     cprint(f'1Период: ^14_{date_start_dt.date()} ^0_-->> ^14_{date_end_dt.date()}')
     # return
     with IMAP4_SSL(config.IMAP_SERVER) as imap:
-        status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)
-        print(status_login)
-        status, folders = imap.list()
-        for folder in folders:
-            # print(folder.decode())
-            # folder_utf8 = imaputf7decode(folder.decode())
-            folder_utf8 = imap_utf7.decode(folder)
-            folder_list = folder_utf8.split(' "|" ')
-            name = folder_list[-1].replace('"', '')
-            print(f'{name:<24}', folder_list[0])
-        try:
-            status, inbox = imap.select(config.FROM_FOLDER)
-        except UnicodeEncodeError:
-            raise err.InvalidFolderNameError(f'Папка "{config.FROM_FOLDER}" не найдена') from None
-        inbox_count = inbox[0].decode()
-        print(f'Входящие {inbox_count}')
+        imap_session(imap,
+                     from_folder=from_folder, target_folder=target_folder,
+                     period=(date_start_dt, date_end_dt))
 
-        # ids = get_all_ids(imap)
-        # uids = get_uids(imap)  # All uids
-        # uids = get_uids(imap, criterion='UNSEEN')  # только непрочитанные
-        uids = get_uids(imap, criterion='SINCE 01-Feb-2023 BEFORE 01-Mar-2023')
-        
-        print(f'Найдено писем {len(uids)} {uids}')
-
-        show_info_msg(imap, uid=uids[0])
-        show_info_msg(imap, uid=uids[-1])
-        #for uid in uids:
-            #show_info_msg(imap, uid=uid)
-
-        # move_msg(imap, (ids[-1], ids[-2]), target_folder)
-        # move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
 
 
 if __name__ == '__main__':
