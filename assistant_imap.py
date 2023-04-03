@@ -14,6 +14,7 @@
 import sys
 import os
 import time
+import json
 from datetime import datetime, date, timedelta, time as dt_time
 from imaplib import IMAP4_SSL
 import email
@@ -24,7 +25,7 @@ import accessory.errors as err
 from accessory import authorship, clear_console, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '4', '5')
+__version_info__ = ('0', '5', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -83,7 +84,7 @@ def show_info_msg(imap, uid):
 def init_from_folder():
     name = config.FROM_FOLDER
     if name.lower() in ('inbox', 'входящие'):
-        name = 'INBOX'
+        name = 'Входящие'
     return name
 
 
@@ -109,26 +110,42 @@ def connect_imap(imap):
         raise err.AuthenticationError('Неверные учетные данные или IMAP отключен') from None
 
 
+def get_list_folders(imap):
+    folders = {}
+    status, raw_folders = imap.list()
+    for raw_folder in raw_folders:
+        # print(raw_folder.decode())
+        # folder_utf8 = imaputf7decode(raw_folder.decode())
+        # folder_utf8 = imap_utf7.decode(raw_folder)
+        # folder_sep = folder_utf8.split(' "|" ')
+        # name = folder_sep[-1].replace('"', '')
+        folder_sep = raw_folder.decode().split(' "|" ')
+        service_info = folder_sep[0]
+        raw_name = folder_sep[-1].replace('"', '')
+        name = imap_utf7.decode(raw_name.encode())
+        if name == 'INBOX':
+            name = 'Входящие'
+        folders[name] = (raw_name, service_info)
+        print(f'{name:<24}', service_info)
+    print()
+    return folders
+
+
 def imap_session(imap,
                  from_folder=None, target_folder=None,
                  period=None):
     date_start_dt, date_end_dt = period
 
     connect_imap(imap)
-    status, folders = imap.list()
-    for folder in folders:
-        # print(folder.decode())
-        # folder_utf8 = imaputf7decode(folder.decode())
-        folder_utf8 = imap_utf7.decode(folder)
-        folder_list = folder_utf8.split(' "|" ')
-        name = folder_list[-1].replace('"', '')
-        print(f'{name:<24}', folder_list[0])
+    folders = get_list_folders(imap)
+    # print(json.dumps(folders, indent=4, ensure_ascii=False))
+
     try:
-        status, inbox = imap.select(from_folder)
+        status, inbox = imap.select(folders[from_folder][0])
     except UnicodeEncodeError:
         raise err.InvalidFolderNameError(f'Папка "{config.FROM_FOLDER}" не найдена') from None
     inbox_count = inbox[0].decode()
-    print(f'Входящие {inbox_count}')
+    print(f'Всего писем в папке "{from_folder}": {inbox_count}')
 
     # ids = get_all_ids(imap)
     # uids = get_uids(imap)  # All uids
@@ -137,8 +154,9 @@ def imap_session(imap,
 
     print(f'Найдено писем {len(uids)} {uids}')
 
-    show_info_msg(imap, uid=uids[0])
-    show_info_msg(imap, uid=uids[-1])
+    if uids:
+        show_info_msg(imap, uid=uids[0])
+        show_info_msg(imap, uid=uids[-1])
     #for uid in uids:
         #show_info_msg(imap, uid=uid)
 
