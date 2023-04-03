@@ -24,7 +24,7 @@ import imap_utf7
 from accessory import authorship, clear_console, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '4', '0')
+__version_info__ = ('0', '4', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -132,19 +132,27 @@ def main():
         #for uid in uids:
             #show_info_msg(imap, uid=uid)
 
-
-
-def exit_from_program(code: int = 0) -> None:
-    time.sleep(1)
-    try:
-        sys.exit(code)
-    except SystemExit:
-        os._exit(code)
         # move_msg(imap, (ids[-1], ids[-2]), target_folder)
         # move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
 
 
 if __name__ == '__main__':
+    _width = 130
+    _hight = 54
+    if sys.platform == 'win32':
+        os.system('color 71')
+        # os.system('mode con cols=%d lines=%d' % (_width, _hight))
+    else:
+        os.system('setterm -background white -foreground white -store')
+        # ubuntu terminal
+        os.system('setterm -term linux -back $blue -fore white -clear')
+    PATH_SCRIPT = os.path.abspath(os.path.dirname(__file__))
+    os.chdir(PATH_SCRIPT)
+    clear_console()
+    check_version()
+
+    authorship(__author__, __title__, __version__, __copyright__)  # width=_width
+
     try:
         main()
     except Exception as e:
