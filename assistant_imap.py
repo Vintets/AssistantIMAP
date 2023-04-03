@@ -20,23 +20,15 @@ import email
 from utf7 import imaputf7decode, imaputf7encode
 from configs import config
 import imap_utf7
-# import accessory.errors as err
+import accessory.errors as err
 from accessory import authorship, clear_console, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '4', '1')
+__version_info__ = ('0', '4', '2')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
 __copyright__ = 'Copyright 2023 (c)  bitbucket.org/Vintets'
-
-
-class ParseStrDateError(Exception):
-    def __init__(self, msg = ''):
-        self.msg = msg
-
-    def __str__(self):
-        print(self.msg)
 
 
 def move_msg(imap, mail_ids, target_folder):
@@ -92,11 +84,11 @@ def parse_strdates():
     try:
         d_start = datetime.strptime(config.DATE_START, '%d.%m.%Y')
     except ValueError as e:
-        raise ParseStrDateError('Неправильная дата начала периода')
+        raise err.ParseStrDateError('Неправильная дата начала периода') from None
     try:
         d_end = datetime.strptime(config.DATE_END, '%d.%m.%Y')
     except ValueError as e:
-        raise ParseStrDateError('Неправильная дата конца периода')
+        raise err.ParseStrDateError('Неправильная дата конца периода') from None
     return d_start, d_end
 
 
@@ -155,11 +147,11 @@ if __name__ == '__main__':
 
     try:
         main()
-    except Exception as e:
-        print(e)
-        # logger.critical(e)  # __str__()
-        raise e
+    except err.ParseStrDateError as e:
+        logger.critical(e)  # __str__()
         exit_from_program(code=1)
-    except KeyboardInterrupt:
-        # logger.info('Отмена. Скрипт остановлен.')
-        exit_from_program(code=0)
+    except Exception as e:
+        logger.critical(e)  # __str__()
+        if config.EXCEPTION_TRACE:
+            raise e
+        exit_from_program(code=1)
