@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('1', '1', '0')
+__version_info__ = ('1', '1', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -196,7 +196,8 @@ def main():
     target_folder = config.TARGET_FOLDER
     date_start, date_end = parse_strdates()
     cprint(f'5Выбран почтовый ящик ^15_{config.MAIL_LOGIN}')
-    cprint(f'1Период: ^14_{date_start.date()} ^0_-->> ^14_{date_end.date()}')
+    cprint(f'1Откуда, куда: ^14_{config.FROM_FOLDER} ^0_-->> ^14_{target_folder}')
+    cprint(f'1Период с      ^14_{date_start.date()} ^0_по ^14_{date_end.date()}')
     with IMAP4_SSL(config.IMAP_SERVER) as imap:
         imap_session(imap,
                      from_folder=from_folder, target_folder=target_folder,
