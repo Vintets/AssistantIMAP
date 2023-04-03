@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('0', '5', '6')
+__version_info__ = ('0', '6', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -135,6 +135,13 @@ def imap_search_uids(imap, period):
     return uids
 
 
+def waiting_for_confirmation(msg=''):
+    cprint(msg, end='')
+    command = input('')
+    if command != 'Y':
+        raise err.RefusalToMoveError(f'Отмена! Перемещение не подтверждено') from None
+
+
 def imap_session(imap,
                  from_folder=None, target_folder=None,
                  period=None):
@@ -155,6 +162,8 @@ def imap_session(imap,
     # uids = get_uids(imap, criterion='UNSEEN')  # только непрочитанные
     uids = imap_search_uids(imap, period)
     cprint(f'0Найдено писем ^14_{len(uids)} ^1_{uids}')
+
+    waiting_for_confirmation(msg='5Для переноса писем введите ^9_Y : ')
 
     if uids:
         show_info_msg(imap, uid=uids[0])
@@ -199,6 +208,9 @@ if __name__ == '__main__':
     except (err.ParseStrDateError, err.InvalidFolderNameError, err.AuthenticationError) as e:
         logger.critical(e)
         exit_from_program(code=1, close=config.CLOSECONSOLE)
+    except err.RefusalToMoveError as e:
+        logger.log('FAIL', e)
+        exit_from_program(code=0, close=config.CLOSECONSOLE)
     except KeyboardInterrupt:
         logger.info('Отмена. Скрипт остановлен.')
         exit_from_program(code=0, close=config.CLOSECONSOLE)

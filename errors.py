@@ -25,6 +25,12 @@ class AuthenticationError(Exception):
     pass
 
 
+class RefusalToMoveError(Exception):
+    """ Refusal to move email. Not input "Y" """
+
+    pass
+
+
 def process_critical_exception(message: Optional[str] = None) -> None:
     """Prints message, describing critical situation, and exit."""
 
