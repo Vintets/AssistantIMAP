@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('1', '2', '0')
+__version_info__ = ('1', '3', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -136,6 +136,13 @@ def select_folder_on_server(imap, folders, from_folder):
     print(f'Всего писем в папке "{from_folder}": {inbox_count}')
 
 
+def check_target_folder(folders, target_folder):
+    try:
+        target_folder = folders[target_folder][0]
+    except KeyError:
+        raise err.InvalidFolderNameError(f'Папка "{target_folder}" не найдена') from None
+
+
 def imap_search_uids(imap, period):
     date_start_dt, date_end_dt = period
     date_start = date_start_dt.strftime('%d-%b-%Y')
@@ -177,6 +184,7 @@ def imap_session(imap,
     # print(json.dumps(folders, indent=4, ensure_ascii=False))
 
     select_folder_on_server(imap, folders, from_folder)
+    check_target_folder(folders, target_folder)
 
     # ids = get_all_ids(imap)
     # uids = get_uids(imap)  # All uids
