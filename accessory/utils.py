@@ -41,8 +41,11 @@ def lclick(x: int, y: int) -> None:
     win32api.mouse_event(MOUSEEVENTF_LEFTUP, x, y, 0, 0)
 
 
-def exit_from_program(code: int = 0) -> None:
-    time.sleep(1)
+def exit_from_program(code: int = 0, close: bool = False) -> None:
+    if not close:
+        input('\n---------------   END   ---------------')
+    else:
+        time.sleep(1)
     try:
         sys.exit(code)
     except SystemExit:

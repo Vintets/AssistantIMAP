@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('0', '5', '3')
+__version_info__ = ('0', '5', '4')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -193,10 +193,13 @@ if __name__ == '__main__':
     try:
         main()
     except (err.ParseStrDateError, err.InvalidFolderNameError, err.AuthenticationError) as e:
-        logger.critical(e)  # __str__()
-        exit_from_program(code=1)
+        logger.critical(e)
+        exit_from_program(code=1, close=config.CLOSECONSOLE)
+    except KeyboardInterrupt:
+        logger.info('Отмена. Скрипт остановлен.')
+        exit_from_program(code=0, close=config.CLOSECONSOLE)
     except Exception as e:
         logger.critical(e)  # __str__()
         if config.EXCEPTION_TRACE:
             raise e
-        exit_from_program(code=1)
+        exit_from_program(code=1, close=config.CLOSECONSOLE)
