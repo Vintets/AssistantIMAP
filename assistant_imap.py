@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('0', '6', '1')
+__version_info__ = ('0', '6', '2')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -148,6 +148,11 @@ def show_first_last_mail_info(imap, uids):
         show_info_msg(imap, uid=uids[-1])
 
 
+def show_all_mail_info(imap, uids):
+    for uid in uids:
+        show_info_msg(imap, uid=uid)
+
+
 def imap_session(imap,
                  from_folder=None, target_folder=None,
                  period=None):
@@ -171,9 +176,8 @@ def imap_session(imap,
 
     waiting_for_confirmation(msg='5Для переноса писем введите ^9_Y : ')
 
-    #for uid in uids:
-        #show_info_msg(imap, uid=uid)
     show_first_last_mail_info(imap, uids)
+    # show_all_mail_info(imap, uids)
 
     # move_msg(imap, (ids[-1], ids[-2]), target_folder)
     # move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
