@@ -24,7 +24,7 @@ import imap_utf7
 from accessory import authorship, clear_consol, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '3', '2')
+__version_info__ = ('0', '3', '3')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -84,8 +84,11 @@ def show_info_msg(imap, uid):
     status, msg = imap.uid('fetch', uid, '(RFC822)')
     msg = email.message_from_bytes(msg[0][1])
 
-    msg_date = datetime.strptime(msg['Date'], '%a, %d %b %Y %H:%M:%S %z')
     # print(msg['Date'])  # Thu, 30 Mar 2023 14:24:38 +0300  (2023, 3, 30, 14, 24, 38, 0, 1, -1, 10800)
+    try:
+        msg_date = datetime.strptime(msg['Date'], '%a, %d %b %Y %H:%M:%S %z')
+    except ValueError:
+        msg_date = datetime.strptime(msg['Date'], '%a, %d %b %Y %H:%M:%S %z (%Z)')
     letter_id = msg['Message-ID']  # айди письма
     letter_from = msg['Return-path']  # e-mail отправителя
     print(f'\nMessage {int(uid)}')
