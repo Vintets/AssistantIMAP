@@ -24,7 +24,7 @@ import accessory.errors as err
 from accessory import authorship, clear_console, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '4', '3')
+__version_info__ = ('0', '4', '4')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -80,6 +80,13 @@ def show_info_msg(imap, uid):
     print(msg_date, letter_id, letter_from)
 
 
+def init_from_folder():
+    name = config.FROM_FOLDER
+    if name.lower() in ('inbox', 'входящие'):
+        name = 'INBOX'
+    return name
+
+
 def parse_strdates():
     try:
         d_start = datetime.strptime(config.DATE_START, '%d.%m.%Y')
@@ -93,6 +100,7 @@ def parse_strdates():
 
 
 def main():
+    from_folder = init_from_folder()
     target_folder = imap_utf7.encode(config.TARGET_FOLDER)
     date_start_dt, date_end_dt = parse_strdates()
     cprint(f'13Выбран почтовый ящик ^15_{config.MAIL_LOGIN}')
