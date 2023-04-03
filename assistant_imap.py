@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('1', '1', '1')
+__version_info__ = ('1', '2', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -163,8 +163,9 @@ def show_all_mail_info(imap, uids):
 
 
 def move_emails(imap, uids, target_folder=None):
-    # move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
-    move_msg_uid(imap, uids, target_folder)
+    # run_uids = (uids[-1], uids[-2])  # for test. Only first and last
+    run_uids = uids
+    move_msg_uid(imap, run_uids, target_folder)
 
 
 def imap_session(imap,
