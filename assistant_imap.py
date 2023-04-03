@@ -17,14 +17,13 @@ import time
 from datetime import datetime, date, timedelta, time as dt_time
 from imaplib import IMAP4_SSL
 import email
-# import shlex
 from utf7 import imaputf7decode, imaputf7encode
 import imap_utf7
 # import accessory.errors as err
 from accessory import authorship, clear_consol, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '3', '5')
+__version_info__ = ('0', '3', '6')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -119,7 +118,6 @@ def main():
             # print(folder.decode())
             # folder_utf8 = imaputf7decode(folder.decode())
             folder_utf8 = imap_utf7.decode(folder)
-            # folder_list = shlex.split(folder_utf8)
             folder_list = folder_utf8.split(' "|" ')
             name = folder_list[-1].replace('"', '')
             print(f'{name:<24}', folder_list[0])
@@ -139,9 +137,6 @@ def main():
         #for uid in uids:
             #show_info_msg(imap, uid=uid)
 
-        # selected_msg = filter_messages_by_date(imap, uids)
-
-
         # move_msg(imap, (ids[-1], ids[-2]), imap_utf7.encode(target_folder))
         # move_msg_uid(imap, (uids[-1], uids[-2]), imap_utf7.encode(target_folder))
 
@@ -158,6 +153,7 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as e:
+        print(e)
         # logger.critical(e)  # __str__()
         raise e
         exit_from_program(code=1)
