@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('0', '5', '5')
+__version_info__ = ('0', '5', '6')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -127,6 +127,14 @@ def get_list_folders(imap):
     return folders
 
 
+def imap_search_uids(imap, period):
+    date_start_dt, date_end_dt = period
+    date_start = date_start_dt.strftime('%d-%b-%Y')
+    date_end = date_end_dt.strftime('%d-%b-%Y')
+    uids = get_uids(imap, criterion=f'SINCE {date_start} BEFORE {date_end}')
+    return uids
+
+
 def imap_session(imap,
                  from_folder=None, target_folder=None,
                  period=None):
@@ -145,9 +153,8 @@ def imap_session(imap,
     # ids = get_all_ids(imap)
     # uids = get_uids(imap)  # All uids
     # uids = get_uids(imap, criterion='UNSEEN')  # только непрочитанные
-    uids = get_uids(imap, criterion='SINCE 01-Feb-2023 BEFORE 01-Mar-2023')
-
-    print(f'Найдено писем {len(uids)} {uids}')
+    uids = imap_search_uids(imap, period)
+    cprint(f'0Найдено писем ^14_{len(uids)} ^1_{uids}')
 
     if uids:
         show_info_msg(imap, uid=uids[0])
