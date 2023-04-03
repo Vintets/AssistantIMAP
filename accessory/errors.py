@@ -13,6 +13,12 @@ class ParseStrDateError(Exception):
         return self.msg
 
 
+class InvalidFolderNameError(Exception):
+    """ Invalid Name Folder FROM_FOLDER or TARGET_FOLDER"""
+
+    pass
+
+
 def process_critical_exception(message: Optional[str] = None) -> None:
     """Prints message, describing critical situation, and exit"""
 

@@ -24,7 +24,7 @@ import accessory.errors as err
 from accessory import authorship, clear_console, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '4', '2')
+__version_info__ = ('0', '4', '3')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -95,8 +95,9 @@ def parse_strdates():
 def main():
     target_folder = imap_utf7.encode(config.TARGET_FOLDER)
     date_start_dt, date_end_dt = parse_strdates()
-    print(date_start_dt.date(), '-->>', date_end_dt.date())
-    return
+    cprint(f'13Выбран почтовый ящик ^15_{config.MAIL_LOGIN}')
+    cprint(f'1Период: ^14_{date_start_dt.date()} ^0_-->> ^14_{date_end_dt.date()}')
+    # return
     with IMAP4_SSL(config.IMAP_SERVER) as imap:
         status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)
         print(status_login)
@@ -108,7 +109,10 @@ def main():
             folder_list = folder_utf8.split(' "|" ')
             name = folder_list[-1].replace('"', '')
             print(f'{name:<24}', folder_list[0])
-        status, inbox = imap.select('INBOX')
+        try:
+            status, inbox = imap.select(config.FROM_FOLDER)
+        except UnicodeEncodeError:
+            raise err.InvalidFolderNameError(f'Папка "{config.FROM_FOLDER}" не найдена') from None
         inbox_count = inbox[0].decode()
         print(f'Входящие {inbox_count}')
 
@@ -147,7 +151,7 @@ if __name__ == '__main__':
 
     try:
         main()
-    except err.ParseStrDateError as e:
+    except (err.ParseStrDateError, err.InvalidFolderNameError) as e:
         logger.critical(e)  # __str__()
         exit_from_program(code=1)
     except Exception as e:

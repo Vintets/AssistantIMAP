@@ -30,10 +30,16 @@ Depends on:
 IMAP_SERVER = 'imap.yandex.ru'
 MAIL_LOGIN = 'login'
 MAIL_PASSW = 'password'
-TARGET_FOLDER = 'Archive'
+
+FROM_FOLDER = 'Входящие'
+TARGET_FOLDER = 'Archive_2022'
+DATE_START = '01.02.2023'
+DATE_END = '01.03.2023'
 ```
-``USR`` : Replace with MySQL/MariaDB user name
-``PWD`` : Replace with MySQL/MariaDB user password
+``MAIL_LOGIN`` : Replace with mailbox username
+``MAIL_PASSW`` : Replace with mailbox user password
+``FROM_FOLDER, TARGET_FOLDER`` : Select source and target folder
+``DATE_START, DATE_END`` : Choose a period
 
 
 ## Usage
@@ -43,9 +49,6 @@ python3 assistant_imap.py
 ```
 
 ## License
-____
-
-:copyright: 2023 by Vint
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 :license:  [Apache License, Version 2.0](https://opensource.org/licenses/Apache-2.0)
@@ -54,5 +57,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 ____
 
+:copyright: 2023 by Vint
+____
 
-> Примичание: ...

@@ -4,8 +4,10 @@ from pathlib import Path
 IMAP_SERVER = 'imap.yandex.ru'
 MAIL_LOGIN = 'login'
 MAIL_PASSW = 'password'
-TARGET_FOLDER = 'Archive'
-DATE_START = '01.02.20235'
+
+FROM_FOLDER = 'Входящие'
+TARGET_FOLDER = 'Archive_2022'
+DATE_START = '01.02.2023'
 DATE_END = '01.03.2023'
 
 CLOSECONSOLE = True
