@@ -24,7 +24,7 @@ import imap_utf7
 from accessory import authorship, clear_consol, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '3', '3')
+__version_info__ = ('0', '3', '5')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -128,20 +128,22 @@ def main():
         print(f'Входящие {inbox_count}')
 
         # ids = get_all_ids(imap)
+        # uids = get_uids(imap)  # All uids
         # uids = get_uids(imap, criterion='UNSEEN')  # только непрочитанные
-        uids = get_uids(imap, criterion='(SINCE "16-03-2023")')
-        # uids = get_uids(imap)
-        print(uids)
+        uids = get_uids(imap, criterion='SINCE 01-Feb-2023 BEFORE 01-Mar-2023')
+        
+        print(f'Найдено писем {len(uids)} {uids}')
 
+        show_info_msg(imap, uid=uids[0])
         show_info_msg(imap, uid=uids[-1])
+        #for uid in uids:
+            #show_info_msg(imap, uid=uid)
 
         # selected_msg = filter_messages_by_date(imap, uids)
 
 
-        # move_msg(imap, (ids[-1], ids[-2]), target_folder)
-        # move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
-
-        # imap.fetch(b'19', "(BODY[HEADER.FIELDS (Subject)])")
+        # move_msg(imap, (ids[-1], ids[-2]), imap_utf7.encode(target_folder))
+        # move_msg_uid(imap, (uids[-1], uids[-2]), imap_utf7.encode(target_folder))
 
 
 def exit_from_program(code: int = 0) -> None:
