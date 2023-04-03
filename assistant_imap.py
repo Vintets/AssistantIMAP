@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('2', '0', '0')
+__version_info__ = ('2', '1', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -174,11 +174,14 @@ def move_emails(imap, uids, folders=None, from_folder=None, target_folder=None):
     run_uids = uids
     logger.info(f'Запуск перемещения {len(run_uids)} писем из {from_folder} в {target_folder}')
     try:
+        start_time = time.monotonic()
         move_msg_uid(imap, run_uids, folders[target_folder][0])
+        end_time = time.monotonic()
+        delta = timedelta(seconds=end_time - start_time)
     except imap.error as e:
         raise err.MoveEmailsError(f'Ошибка перемещения {e}') from None
     else:
-        logger.success('Письма успешно перемещены!')
+        logger.success(f'Письма успешно перемещены за время {delta}')
 
 
 def imap_session(imap,
