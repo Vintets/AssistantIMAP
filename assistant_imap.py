@@ -102,7 +102,9 @@ def parse_strdates():
 def connect_imap(imap):
     try:
         status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)
-        print(status_login)
+        logger.success(f'Подключились к почтовому ящику {config.MAIL_LOGIN}')
+        # cprint(f'2Подключились к почтовому ящику {config.MAIL_LOGIN}')
+        # print(status_login)
     except imap.error:
         raise err.AuthenticationError('Неверные учетные данные или IMAP отключен') from None
 
