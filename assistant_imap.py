@@ -24,7 +24,7 @@ import imap_utf7
 from accessory import authorship, clear_consol, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '3', '1')
+__version_info__ = ('0', '3', '2')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -36,6 +36,15 @@ mail_pass = 'password'
 target_folder = 'Archive'
 date_start = '01.02.20235'
 date_end = '01.03.2023'
+
+
+class ParseStrDateError(Exception):
+    def __init__(self, msg = ''):
+        self.msg = msg
+
+    def __str__(self):
+        print(self.msg)
+
 
 def move_msg(imap, mail_ids, target_folder):
     for mail_id in mail_ids:
@@ -83,17 +92,22 @@ def show_info_msg(imap, uid):
     print(msg_date, letter_id, letter_from)
 
 
-def filter_messages_by_date(imap, uids):
-    for uid in uids:
-        status, msg = imap.uid('fetch', uid, '(RFC822)')
-        # if status == 
-        msg = email.message_from_bytes(msg[0][1])
-
-        msg_date = datetime.strptime(msg['Date'], '%a, %d %b %Y %H:%M:%S %z')
-
+def parse_strdates():
+    try:
+        d_start = datetime.strptime(date_start, '%d.%m.%Y')
+    except ValueError as e:
+        raise ParseStrDateError('Неправильная дата начала периода')
+    try:
+        d_end = datetime.strptime(date_end, '%d.%m.%Y')
+    except ValueError as e:
+        raise ParseStrDateError('Неправильная дата конца периода')
+    return d_start, d_end
 
 
 def main():
+    date_start_dt, date_end_dt = parse_strdates()
+    print(date_start_dt.date(), '-->>', date_end_dt.date())
+    return
     with IMAP4_SSL(imap_server) as imap:
         status_login = imap.login(username, mail_pass)
         print(status_login)
