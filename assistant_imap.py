@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('1', '0', '1')
+__version_info__ = ('1', '1', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -127,6 +127,15 @@ def get_list_folders(imap):
     return folders
 
 
+def select_folder_on_server(imap, folders, from_folder):
+    try:
+        status, inbox = imap.select(folders[from_folder][0])
+    except UnicodeEncodeError:
+        raise err.InvalidFolderNameError(f'Папка "{config.FROM_FOLDER}" не найдена') from None
+    inbox_count = inbox[0].decode()
+    print(f'Всего писем в папке "{from_folder}": {inbox_count}')
+
+
 def imap_search_uids(imap, period):
     date_start_dt, date_end_dt = period
     date_start = date_start_dt.strftime('%d-%b-%Y')
@@ -166,12 +175,7 @@ def imap_session(imap,
     folders = get_list_folders(imap)
     # print(json.dumps(folders, indent=4, ensure_ascii=False))
 
-    try:
-        status, inbox = imap.select(folders[from_folder][0])
-    except UnicodeEncodeError:
-        raise err.InvalidFolderNameError(f'Папка "{config.FROM_FOLDER}" не найдена') from None
-    inbox_count = inbox[0].decode()
-    print(f'Всего писем в папке "{from_folder}": {inbox_count}')
+    select_folder_on_server(imap, folders, from_folder)
 
     # ids = get_all_ids(imap)
     # uids = get_uids(imap)  # All uids
