@@ -19,13 +19,13 @@ from datetime import datetime, date, timedelta, time as dt_time
 from imaplib import IMAP4_SSL
 import email
 from configs import config
-import accessory.errors as err
+import errors as err
 from accessory import (authorship, clear_console, cprint,
                        check_version, create_dirs, exit_from_program,
                        logger, imap_utf7)
 
 
-__version_info__ = ('0', '5', '2')
+__version_info__ = ('0', '5', '3')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
