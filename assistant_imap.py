@@ -24,7 +24,7 @@ import accessory.errors as err
 from accessory import authorship, clear_console, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '4', '4')
+__version_info__ = ('0', '4', '5')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -103,8 +103,12 @@ def imap_session(imap,
                  from_folder=None, target_folder=None,
                  period=None):
     date_start_dt, date_end_dt = period
-    status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)
-    print(status_login)
+
+    try:
+        status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)
+        print(status_login)
+    except imap.error:
+        raise err.AuthenticationError('Неверные учетные данные или IMAP отключен') from None
     status, folders = imap.list()
     for folder in folders:
         # print(folder.decode())
@@ -168,7 +172,7 @@ if __name__ == '__main__':
 
     try:
         main()
-    except (err.ParseStrDateError, err.InvalidFolderNameError) as e:
+    except (err.ParseStrDateError, err.InvalidFolderNameError, err.AuthenticationError) as e:
         logger.critical(e)  # __str__()
         exit_from_program(code=1)
     except Exception as e:

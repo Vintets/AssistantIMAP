@@ -4,7 +4,7 @@ from typing import Optional
 
 
 class ParseStrDateError(Exception):
-    """Error parsing str date. Incorrect format"""
+    """Error parsing str date. Incorrect format."""
 
     def __init__(self, msg: Optional[str] = None) -> None:
         self.msg = msg if msg is not None else '<<ParseStrDateError>>'
@@ -14,13 +14,19 @@ class ParseStrDateError(Exception):
 
 
 class InvalidFolderNameError(Exception):
-    """ Invalid Name Folder FROM_FOLDER or TARGET_FOLDER"""
+    """ Invalid Name Folder FROM_FOLDER or TARGET_FOLDER."""
+
+    pass
+
+
+class AuthenticationError(Exception):
+    """ LOGIN invalid credentials or IMAP is disabled. imaplib.IMAP4.error"""
 
     pass
 
 
 def process_critical_exception(message: Optional[str] = None) -> None:
-    """Prints message, describing critical situation, and exit"""
+    """Prints message, describing critical situation, and exit."""
 
     if message is not None:
         print(message)
