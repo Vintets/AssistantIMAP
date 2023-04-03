@@ -24,12 +24,18 @@ import imap_utf7
 from accessory import authorship, clear_consol, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '3', '0')
+__version_info__ = ('0', '3', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
 __copyright__ = 'Copyright 2023 (c)  bitbucket.org/Vintets'
 
+imap_server = 'imap.yandex.ru'
+username = 'login'
+mail_pass = 'password'
+target_folder = 'Archive'
+date_start = '01.02.20235'
+date_end = '01.03.2023'
 
 def move_msg(imap, mail_ids, target_folder):
     for mail_id in mail_ids:
@@ -87,7 +93,7 @@ def filter_messages_by_date(imap, uids):
 
 
 
-def main(imap_server, username, mail_pass, target_folder):
+def main():
     with IMAP4_SSL(imap_server) as imap:
         status_login = imap.login(username, mail_pass)
         print(status_login)
@@ -130,13 +136,8 @@ def exit_from_program(code: int = 0) -> None:
 
 
 if __name__ == '__main__':
-    imap_server = 'imap.yandex.ru'
-    username = 'login'
-    mail_pass = 'password'
-    target_folder = imap_utf7.encode('Входящие_2022')
-
     try:
-        main(imap_server, username, mail_pass, target_folder)
+        main()
     except Exception as e:
         # logger.critical(e)  # __str__()
         raise e
