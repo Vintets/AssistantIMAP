@@ -18,14 +18,13 @@ import json
 from datetime import datetime, date, timedelta, time as dt_time
 from imaplib import IMAP4_SSL
 import email
-from utf7 import imaputf7decode, imaputf7encode
 from configs import config
 import imap_utf7
 import accessory.errors as err
 from accessory import authorship, clear_console, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '5', '0')
+__version_info__ = ('0', '5', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -115,10 +114,6 @@ def get_list_folders(imap):
     status, raw_folders = imap.list()
     for raw_folder in raw_folders:
         # print(raw_folder.decode())
-        # folder_utf8 = imaputf7decode(raw_folder.decode())
-        # folder_utf8 = imap_utf7.decode(raw_folder)
-        # folder_sep = folder_utf8.split(' "|" ')
-        # name = folder_sep[-1].replace('"', '')
         folder_sep = raw_folder.decode().split(' "|" ')
         service_info = folder_sep[0]
         raw_name = folder_sep[-1].replace('"', '')

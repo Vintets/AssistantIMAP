@@ -33,6 +33,15 @@ flake8 D:\YandexDisk\_Projects\AssistantIMAP\assistant_imap.py
 
 
 # ==================================================================================================
+
+Альтернатива перекодировщику
+
+from utf7 import imaputf7decode, imaputf7encode
+folder_utf8 = imaputf7decode(raw_folder.decode())
+name = imaputf7decode(raw_name)
+
+
+# ==================================================================================================
             *** Анализ ***
 
 RFC 3501    IMAPv4
