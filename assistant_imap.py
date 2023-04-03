@@ -12,13 +12,14 @@
 """
 
 import sys
+import os
 import time
 from datetime import datetime, date, timedelta, time as dt_time
 from imaplib import IMAP4_SSL
 import email
 # import shlex
 from utf7 import imaputf7decode, imaputf7encode
-from imap_tools import imap_utf7
+import imap_utf7
 # import accessory.errors as err
 from accessory import authorship, clear_consol, cprint, check_version, create_dirs, exit_from_program, logger
 
