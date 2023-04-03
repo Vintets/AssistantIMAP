@@ -41,6 +41,11 @@ folder_utf8 = imaputf7decode(raw_folder.decode())
 name = imaputf7decode(raw_name)
 
 
+Перемещение по id и uid
+move_msg(imap, (ids[-1], ids[-2]), target_folder)
+move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
+
+
 # ==================================================================================================
             *** Анализ ***
 

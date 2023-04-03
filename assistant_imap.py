@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('0', '6', '2')
+__version_info__ = ('1', '0', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -153,6 +153,11 @@ def show_all_mail_info(imap, uids):
         show_info_msg(imap, uid=uid)
 
 
+def move_emails(imap, uids, target_folder=None):
+    # move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
+    move_msg_uid(imap, uids, target_folder)
+
+
 def imap_session(imap,
                  from_folder=None, target_folder=None,
                  period=None):
@@ -179,12 +184,12 @@ def imap_session(imap,
     show_first_last_mail_info(imap, uids)
     # show_all_mail_info(imap, uids)
 
-    # move_msg(imap, (ids[-1], ids[-2]), target_folder)
-    # move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
+    move_emails(imap, uids, target_folder=folders[target_folder][0])
+
 
 def main():
     from_folder = init_from_folder()
-    target_folder = imap_utf7.encode(config.TARGET_FOLDER)
+    target_folder = config.TARGET_FOLDER
     date_start, date_end = parse_strdates()
     cprint(f'5Выбран почтовый ящик ^15_{config.MAIL_LOGIN}')
     cprint(f'1Период: ^14_{date_start.date()} ^0_-->> ^14_{date_end.date()}')
