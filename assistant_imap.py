@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('0', '5', '4')
+__version_info__ = ('0', '5', '5')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -130,7 +130,6 @@ def get_list_folders(imap):
 def imap_session(imap,
                  from_folder=None, target_folder=None,
                  period=None):
-    date_start_dt, date_end_dt = period
 
     connect_imap(imap)
     folders = get_list_folders(imap)
@@ -162,15 +161,13 @@ def imap_session(imap,
 def main():
     from_folder = init_from_folder()
     target_folder = imap_utf7.encode(config.TARGET_FOLDER)
-    date_start_dt, date_end_dt = parse_strdates()
-    cprint(f'13Выбран почтовый ящик ^15_{config.MAIL_LOGIN}')
-    cprint(f'1Период: ^14_{date_start_dt.date()} ^0_-->> ^14_{date_end_dt.date()}')
-    # return
+    date_start, date_end = parse_strdates()
+    cprint(f'5Выбран почтовый ящик ^15_{config.MAIL_LOGIN}')
+    cprint(f'1Период: ^14_{date_start.date()} ^0_-->> ^14_{date_end.date()}')
     with IMAP4_SSL(config.IMAP_SERVER) as imap:
         imap_session(imap,
                      from_folder=from_folder, target_folder=target_folder,
-                     period=(date_start_dt, date_end_dt))
-
+                     period=(date_start, date_end))
 
 
 if __name__ == '__main__':
