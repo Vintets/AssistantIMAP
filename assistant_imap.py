@@ -99,16 +99,20 @@ def parse_strdates():
     return d_start, d_end
 
 
-def imap_session(imap,
-                 from_folder=None, target_folder=None,
-                 period=None):
-    date_start_dt, date_end_dt = period
-
+def connect_imap(imap):
     try:
         status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)
         print(status_login)
     except imap.error:
         raise err.AuthenticationError('Неверные учетные данные или IMAP отключен') from None
+
+
+def imap_session(imap,
+                 from_folder=None, target_folder=None,
+                 period=None):
+    date_start_dt, date_end_dt = period
+
+    connect_imap(imap)
     status, folders = imap.list()
     for folder in folders:
         # print(folder.decode())
