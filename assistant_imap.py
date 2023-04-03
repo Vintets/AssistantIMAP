@@ -18,23 +18,17 @@ from datetime import datetime, date, timedelta, time as dt_time
 from imaplib import IMAP4_SSL
 import email
 from utf7 import imaputf7decode, imaputf7encode
+from configs import config
 import imap_utf7
 # import accessory.errors as err
 from accessory import authorship, clear_consol, cprint, check_version, create_dirs, exit_from_program, logger
 
 
-__version_info__ = ('0', '3', '6')
+__version_info__ = ('0', '4', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
 __copyright__ = 'Copyright 2023 (c)  bitbucket.org/Vintets'
-
-imap_server = 'imap.yandex.ru'
-username = 'login'
-mail_pass = 'password'
-target_folder = 'Archive'
-date_start = '01.02.20235'
-date_end = '01.03.2023'
 
 
 class ParseStrDateError(Exception):
@@ -96,22 +90,23 @@ def show_info_msg(imap, uid):
 
 def parse_strdates():
     try:
-        d_start = datetime.strptime(date_start, '%d.%m.%Y')
+        d_start = datetime.strptime(config.DATE_START, '%d.%m.%Y')
     except ValueError as e:
         raise ParseStrDateError('Неправильная дата начала периода')
     try:
-        d_end = datetime.strptime(date_end, '%d.%m.%Y')
+        d_end = datetime.strptime(config.DATE_END, '%d.%m.%Y')
     except ValueError as e:
         raise ParseStrDateError('Неправильная дата конца периода')
     return d_start, d_end
 
 
 def main():
+    target_folder = imap_utf7.encode(config.TARGET_FOLDER)
     date_start_dt, date_end_dt = parse_strdates()
     print(date_start_dt.date(), '-->>', date_end_dt.date())
     return
-    with IMAP4_SSL(imap_server) as imap:
-        status_login = imap.login(username, mail_pass)
+    with IMAP4_SSL(config.IMAP_SERVER) as imap:
+        status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)
         print(status_login)
         status, folders = imap.list()
         for folder in folders:
@@ -137,8 +132,6 @@ def main():
         #for uid in uids:
             #show_info_msg(imap, uid=uid)
 
-        # move_msg(imap, (ids[-1], ids[-2]), imap_utf7.encode(target_folder))
-        # move_msg_uid(imap, (uids[-1], uids[-2]), imap_utf7.encode(target_folder))
 
 
 def exit_from_program(code: int = 0) -> None:
@@ -147,6 +140,8 @@ def exit_from_program(code: int = 0) -> None:
         sys.exit(code)
     except SystemExit:
         os._exit(code)
+        # move_msg(imap, (ids[-1], ids[-2]), target_folder)
+        # move_msg_uid(imap, (uids[-1], uids[-2]), target_folder)
 
 
 if __name__ == '__main__':
