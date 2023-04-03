@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('1', '3', '0')
+__version_info__ = ('1', '3', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -190,7 +190,8 @@ def imap_session(imap,
     # uids = get_uids(imap)  # All uids
     # uids = get_uids(imap, criterion='UNSEEN')  # только непрочитанные
     uids = imap_search_uids(imap, period)
-    cprint(f'0Найдено писем ^14_{len(uids)} ^1_{uids}')
+    cprint(f'0Найдено писем ^14_{len(uids)}')
+    print(uids)
 
     waiting_for_confirmation(msg='5Для переноса писем введите ^9_Y : ')
 
