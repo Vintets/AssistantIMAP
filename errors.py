@@ -26,7 +26,13 @@ class AuthenticationError(Exception):
 
 
 class RefusalToMoveError(Exception):
-    """ Refusal to move email. Not input "Y" """
+    """ Refusal to move email. Not input 'Y'."""
+
+    pass
+
+
+class MoveEmailsError(Exception):
+    """ Error move e-mails"""
 
     pass
 
