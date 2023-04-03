@@ -21,7 +21,7 @@ from utf7 import imaputf7decode, imaputf7encode
 from configs import config
 import imap_utf7
 # import accessory.errors as err
-from accessory import authorship, clear_consol, cprint, check_version, create_dirs, exit_from_program, logger
+from accessory import authorship, clear_console, cprint, check_version, create_dirs, exit_from_program, logger
 
 
 __version_info__ = ('0', '4', '0')

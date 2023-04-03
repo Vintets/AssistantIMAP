@@ -2,7 +2,7 @@ import os
 import sys
 
 
-def clear_consol() -> None:  # очищаем консоль
+def clear_console() -> None:  # очищаем консоль
     if sys.platform == 'win32':
         os.system('cls')
     else:
