@@ -18,7 +18,7 @@ logger.level('FAIL', no=27, color='<light-magenta>', icon='@')
 # удаляем начальный логгер и создаём свой базовый логгер с уровнем default LOGURU_LEVEL 'DEBUG'
 logger.remove()
 name_module = '{name}-' if LOGGER_NAME_MODULE else ''
-new_format = '<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <lvl>{level: <8}</lvl> | <cyan>%s{line}</cyan>- <lvl>{message}</lvl>' % name_module
+new_format = '<light-blue>{time:YYYY-MM-DD HH:mm:ss.SSS}</light-blue> | <lvl>{level: <8}</lvl> | <cyan>%s{line}</cyan>- <lvl>{message}</lvl>' % name_module
 logger.add(sys.stdout, format=new_format)
 
 # добавляем логгеры с дефолтным форматированием для вывода в файлы
