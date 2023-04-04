@@ -80,6 +80,7 @@ ver 4.0.2
 ## License
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
+
 :license:  [Apache License, Version 2.0](https://opensource.org/licenses/Apache-2.0)
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
