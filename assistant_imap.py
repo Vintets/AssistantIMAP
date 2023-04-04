@@ -26,7 +26,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('4', '0', '1')
+__version_info__ = ('4', '0', '2')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -41,8 +41,8 @@ def title_operation():
     return title
 
 
-def create_progressbar():
-    bar = IncrementalBar(title_operation()[0], max=len(mylist), suffix='%(index)d/%(max)d [%(percent)d%%]')
+def create_progressbar(max=0):
+    bar = IncrementalBar(title_operation()[0], max=max, suffix='%(index)d/%(max)d [%(percent)d%%]')
     bar.hide_cursor = False
     bar._hidden_cursor = False
     bar.width = 50
@@ -60,7 +60,7 @@ def chunks(L, n):
 def move_msg_uids(imap, mail_uids, target_folder, count=500):
     """ Faster ~10 times than move by one."""
 
-    bar = create_progressbar()
+    bar = create_progressbar(max=len(mail_uids))
     mail_uids = [x.decode() for x in mail_uids]
     for uids_part in chunks(mail_uids, count):
         uids_part_str = ','.join(uids_part)
