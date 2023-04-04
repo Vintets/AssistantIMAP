@@ -14,19 +14,19 @@
 import sys
 import os
 import time
-import json
-from datetime import datetime, date, timedelta, time as dt_time
+import json  # noqa: F401
+from datetime import datetime, timedelta
 from imaplib import IMAP4_SSL
 import email
 from progress.bar import IncrementalBar
 from configs import config
 import errors as err
 from accessory import (authorship, clear_console, cprint,
-                       check_version, create_dirs, exit_from_program,
+                       check_version, exit_from_program,
                        logger, imap_utf7)
 
 
-__version_info__ = ('4', '0', '2')
+__version_info__ = ('4', '0', '3')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -41,8 +41,8 @@ def title_operation():
     return title
 
 
-def create_progressbar(max=0):
-    bar = IncrementalBar(title_operation()[0], max=max, suffix='%(index)d/%(max)d [%(percent)d%%]')
+def create_progressbar(max_=0):
+    bar = IncrementalBar(title_operation()[0], max=max_, suffix='%(index)d/%(max_)d [%(percent)d%%]')
     bar.hide_cursor = False
     bar._hidden_cursor = False
     bar.width = 50
@@ -50,11 +50,11 @@ def create_progressbar(max=0):
     return bar
 
 
-def chunks(L, n):
+def chunks(seq, n):
     """ Yield successive n-sized chunks from L."""
 
-    for i in range(0, len(L), n):
-        yield L[i:i+n]
+    for i in range(0, len(seq), n):
+        yield seq[i:i + n]
 
 
 def move_msg_uids(imap, mail_uids, target_folder, count=500):
@@ -126,18 +126,18 @@ def init_from_folder():
 def parse_strdates():
     try:
         d_start = datetime.strptime(config.DATE_START, '%d.%m.%Y')
-    except ValueError as e:
+    except ValueError:
         raise err.ParseStrDateError('Неправильная дата начала периода') from None
     try:
         d_end = datetime.strptime(config.DATE_END, '%d.%m.%Y')
-    except ValueError as e:
+    except ValueError:
         raise err.ParseStrDateError('Неправильная дата конца периода') from None
     return d_start, d_end
 
 
 def connect_imap(imap):
     try:
-        status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)
+        status_login = imap.login(config.MAIL_LOGIN, config.MAIL_PASSW)  # noqa: F841
         logger.success(f'Подключились к почтовому ящику {config.MAIL_LOGIN}')
         # cprint(f'2Подключились к почтовому ящику {config.MAIL_LOGIN}')
         # print(status_login)
@@ -263,9 +263,9 @@ def main():
                      period=(date_start, date_end))
 
 
-if __name__ == '__main__':
-    _width = 130
-    _hight = 54
+def init():
+    _width = 130  # noqa: F841
+    _hight = 54  # noqa: F841
     if sys.platform == 'win32':
         os.system('color 71')
         # os.system('mode con cols=%d lines=%d' % (_width, _hight))
@@ -273,12 +273,16 @@ if __name__ == '__main__':
         os.system('setterm -background white -foreground white -store')
         # ubuntu terminal
         os.system('setterm -term linux -back $blue -fore white -clear')
-    PATH_SCRIPT = os.path.abspath(os.path.dirname(__file__))
-    os.chdir(PATH_SCRIPT)
+    path_script = os.path.abspath(os.path.dirname(__file__))
+    os.chdir(path_script)
     clear_console()
     check_version()
 
     authorship(__author__, __title__, __version__, __copyright__)  # width=_width
+
+
+if __name__ == '__main__':  # noqa: C901
+    init()
 
     try:
         main()
