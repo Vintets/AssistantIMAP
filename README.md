@@ -39,11 +39,11 @@ DATE_START = '01.02.2023'
 DATE_END = '01.03.2023'
 ONLY_COPY = True
 ```
-``MAIL_LOGIN`` : Replace with mailbox username
-``MAIL_PASSW`` : Replace with mailbox user password
-``FROM_FOLDER, TARGET_FOLDER`` : Select source and target folder
-``DATE_START, DATE_END`` : Choose a period
-``ONLY_COPY`` : Copy or Move emails
+- ``MAIL_LOGIN`` : Replace with mailbox username
+- ``MAIL_PASSW`` : Replace with mailbox user password
+- ``FROM_FOLDER, TARGET_FOLDER`` : Select source and target folder
+- ``DATE_START, DATE_END`` : Choose a period
+- ``ONLY_COPY`` : Copy or Move emails
 
 
 ## Usage
