@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('2', '2', '1')
+__version_info__ = ('2', '3', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -34,7 +34,7 @@ __copyright__ = 'Copyright 2023 (c)  bitbucket.org/Vintets'
 
 def move_msg(imap, mail_ids, target_folder):
     for mail_id in mail_ids:
-        copy_res = imap.copy(mail_id, target_folder)
+        copy_res = imap.copy(mail_id, f'"{target_folder}"')
         if copy_res[0] == 'OK':
             imap.store(mail_id, '+FLAGS', '\\Deleted')
     imap.expunge()
@@ -42,7 +42,7 @@ def move_msg(imap, mail_ids, target_folder):
 
 def move_msg_uid(imap, mail_uids, target_folder):
     for mail_uid in mail_uids:
-        copy_res = imap.uid('copy', mail_uid, target_folder)
+        copy_res = imap.uid('copy', mail_uid, f'"{target_folder}"')
         if copy_res[0] == 'OK':
             imap.uid('store', mail_uid, '+FLAGS', '\\Deleted')
     imap.expunge()
@@ -130,7 +130,7 @@ def get_list_folders(imap):
 
 def select_folder_on_server(imap, folders, from_folder):
     try:
-        status, inbox = imap.select(folders[from_folder][0])
+        status, inbox = imap.select(f'"{folders[from_folder][0]}"')
     except UnicodeEncodeError:
         raise err.InvalidFolderNameError(f'Папка "{config.FROM_FOLDER}" не найдена') from None
     inbox_count = inbox[0].decode()
