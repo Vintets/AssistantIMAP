@@ -74,6 +74,9 @@ ONLY_COPY = True
 python3 assistant_imap.py
 ```
 
+ver 4.0.2
+![Скриншот работы скрипта](https://github.com/Vintets/AssistantIMAP/raw/master/screenshots/2023-04-04_16-25-41_screenshot_1.png)
+
 ## License
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
