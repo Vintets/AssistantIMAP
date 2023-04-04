@@ -10,7 +10,8 @@ FILENAME_LOG_ERR = PATH_LOGS / 'monitoring_error_{time:YYYY-MM-DD}.log'
 
 
 # исправление цвета INFO на windows с серой консолью
-logger.level('INFO', color='<light-white>')
+logger.level('INFO', color='<light-white><bold>')
+logger.level('CRITICAL', color='<RED><white><bold>')
 
 # добавляем свои уровни 'FAIL'
 logger.level('FAIL', no=27, color='<light-magenta>', icon='@')
