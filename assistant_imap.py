@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('3', '2', '0')
+__version_info__ = ('3', '2', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -37,14 +37,6 @@ def chunks(L, n):
 
     for i in range(0, len(L), n):
         yield L[i:i+n]
-
-
-def move_msg_ids(imap, mail_ids, target_folder):
-    for mail_id in mail_ids:
-        copy_res = imap.copy(mail_id, f'"{target_folder}"')
-        if copy_res[0] == 'OK':
-            imap.store(mail_id, '+FLAGS', '\\Deleted')
-    imap.expunge()
 
 
 def move_msg_uids(imap, mail_uids, target_folder, count=500, delete_=True):
