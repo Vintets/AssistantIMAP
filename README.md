@@ -9,7 +9,7 @@
 Damn mail.Yandex
 
 
-## Зависимости
+## Requirements
 
 ![Python version](https://img.shields.io/badge/python-3.9%2B-blue)
 > Требуется Python 3.9.7+
@@ -20,6 +20,8 @@ pip3 install -r requirements.txt
 ```
 Depends on:
 - loguru
+- progress
+
 
 ## Configuration
 
@@ -35,11 +37,13 @@ FROM_FOLDER = 'Входящие'
 TARGET_FOLDER = 'Archive_2022'
 DATE_START = '01.02.2023'
 DATE_END = '01.03.2023'
+ONLY_COPY = True
 ```
 ``MAIL_LOGIN`` : Replace with mailbox username
 ``MAIL_PASSW`` : Replace with mailbox user password
 ``FROM_FOLDER, TARGET_FOLDER`` : Select source and target folder
 ``DATE_START, DATE_END`` : Choose a period
+``ONLY_COPY`` : Copy or Move emails
 
 
 ## Usage
