@@ -26,16 +26,23 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('4', '0', '0')
+__version_info__ = ('4', '0', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
 __copyright__ = 'Copyright 2023 (c)  bitbucket.org/Vintets'
 
 
+def title_operation():
+    if config.ONLY_COPY:
+        title = ('Копирование', 'копирования', 'скопированы')
+    else:
+        title = ('Перемещение', 'переноса', 'перемещены')
+    return title
+
+
 def create_progressbar():
-    title = 'Копирование' if config.ONLY_COPY else 'Перемещение'
-    bar = IncrementalBar(title, max=len(mylist), suffix='%(index)d/%(max)d [%(percent)d%%]')
+    bar = IncrementalBar(title_operation()[0], max=len(mylist), suffix='%(index)d/%(max)d [%(percent)d%%]')
     bar.hide_cursor = False
     bar._hidden_cursor = False
     bar.width = 50
@@ -184,7 +191,7 @@ def waiting_for_confirmation(msg=''):
     cprint(msg, end='')
     command = input('')
     if command.lower() != 'y':
-        raise err.RefusalToMoveError(f'Отмена! Перемещение не подтверждено') from None
+        raise err.RefusalToMoveError(f'Отмена! {title_operation()[0]} не подтверждено') from None
 
 
 def show_first_last_mail_info(imap, uids):
@@ -201,16 +208,16 @@ def show_all_mail_info(imap, uids):
 def move_emails(imap, uids, folders=None, from_folder=None, target_folder=None):
     # run_uids = (uids[-1], uids[-2])  # for test. Only first and last
     run_uids = uids
-    logger.info(f'Запуск перемещения {len(run_uids)} писем из {from_folder} в {target_folder}')
+    logger.info(f'Запуск {title_operation()[1]} {len(run_uids)} писем из {from_folder} в {target_folder}')
     try:
         start_time = time.monotonic()
         move_msg_uids(imap, run_uids, folders[target_folder][0])
         end_time = time.monotonic()
         delta = timedelta(seconds=end_time - start_time)
     except imap.error as e:
-        raise err.MoveEmailsError(f'Ошибка перемещения {e}') from None
+        raise err.MoveEmailsError(f'Ошибка {title_operation()[1]} {e}') from None
     else:
-        logger.success(f'Письма успешно перемещены за время {delta}')
+        logger.success(f'Письма успешно {title_operation()[2]} за время {delta}')
 
 
 def imap_session(imap,
@@ -234,7 +241,7 @@ def imap_session(imap,
         logger.info('Не найдено писем по критериям')
         return
 
-    waiting_for_confirmation(msg='5Для переноса писем введите ^9_Y : ')
+    waiting_for_confirmation(msg=f'5Для {title_operation()[1]} писем введите ^9_Y : ')
 
     # show_first_last_mail_info(imap, uids)
     # show_all_mail_info(imap, uids)
@@ -247,6 +254,7 @@ def main():
     target_folder = config.TARGET_FOLDER
     date_start, date_end = parse_strdates()
     cprint(f'5Выбран почтовый ящик ^15_{config.MAIL_LOGIN}')
+    cprint(f'1Режим: ^14_{title_operation()[0]}')
     cprint(f'1Откуда, куда: ^14_{config.FROM_FOLDER} ^8_-->> ^14_{target_folder}')
     cprint(f'1Период с      ^14_{date_start.date()} ^8_по ^14_{date_end.date()}')
     with IMAP4_SSL(config.IMAP_SERVER) as imap:
