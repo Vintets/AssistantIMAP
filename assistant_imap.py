@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('3', '1', '0')
+__version_info__ = ('3', '2', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -47,17 +47,19 @@ def move_msg_ids(imap, mail_ids, target_folder):
     imap.expunge()
 
 
-def move_msg_uids(imap, mail_uids, target_folder):
+def move_msg_uids(imap, mail_uids, target_folder, count=500, delete_=True):
     """ Faster ~10 times than move by one."""
 
-    for uids_part in chunks(mail_uids, 500):
     mail_uids = [x.decode() for x in mail_uids]
+    for uids_part in chunks(mail_uids, count):
         uids_part_str = ','.join(uids_part)
         uids_part_str = uids_part_str.encode()
         copy_res = imap.uid('copy', uids_part_str, f'"{target_folder}"')
-        # if copy_res[0] == 'OK':
-            # imap.uid('store', uids_part_str, '+FLAGS', '\\Deleted')
-    # imap.expunge()
+        if delete_ and copy_res[0] == 'OK':
+            imap.uid('store', uids_part_str, '+FLAGS', '\\Deleted')
+    if delete_:
+        status, expunge = imap.expunge()
+        print(len(expunge), expunge)
 
 
 def move_msg_uids_by_one(imap, mail_uids, target_folder):
@@ -196,7 +198,7 @@ def move_emails(imap, uids, folders=None, from_folder=None, target_folder=None):
     logger.info(f'Запуск перемещения {len(run_uids)} писем из {from_folder} в {target_folder}')
     try:
         start_time = time.monotonic()
-        move_msg_uids(imap, run_uids, folders[target_folder][0])
+        move_msg_uids(imap, run_uids, folders[target_folder][0], delete_=False)
         end_time = time.monotonic()
         delta = timedelta(seconds=end_time - start_time)
     except imap.error as e:
