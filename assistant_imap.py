@@ -25,11 +25,18 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('3', '0', '1')
+__version_info__ = ('3', '1', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
 __copyright__ = 'Copyright 2023 (c)  bitbucket.org/Vintets'
+
+
+def chunks(L, n):
+    """ Yield successive n-sized chunks from L."""
+
+    for i in range(0, len(L), n):
+        yield L[i:i+n]
 
 
 def move_msg_ids(imap, mail_ids, target_folder):
@@ -43,12 +50,14 @@ def move_msg_ids(imap, mail_ids, target_folder):
 def move_msg_uids(imap, mail_uids, target_folder):
     """ Faster ~10 times than move by one."""
 
-    mail_uids_str = ','.join((x.decode() for x in mail_uids))
-    mail_uids_str = mail_uids_str.encode()
-    copy_res = imap.uid('copy', mail_uids_str, f'"{target_folder}"')
-    if copy_res[0] == 'OK':
-        imap.uid('store', mail_uids_str, '+FLAGS', '\\Deleted')
-    imap.expunge()
+    for uids_part in chunks(mail_uids, 500):
+    mail_uids = [x.decode() for x in mail_uids]
+        uids_part_str = ','.join(uids_part)
+        uids_part_str = uids_part_str.encode()
+        copy_res = imap.uid('copy', uids_part_str, f'"{target_folder}"')
+        # if copy_res[0] == 'OK':
+            # imap.uid('store', uids_part_str, '+FLAGS', '\\Deleted')
+    # imap.expunge()
 
 
 def move_msg_uids_by_one(imap, mail_uids, target_folder):
