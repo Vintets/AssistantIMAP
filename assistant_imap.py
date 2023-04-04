@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('3', '0', '0')
+__version_info__ = ('3', '0', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -44,7 +44,7 @@ def move_msg_uids(imap, mail_uids, target_folder):
     """ Faster ~10 times than move by one."""
 
     mail_uids_str = ','.join((x.decode() for x in mail_uids))
-    mail_uids_str = mail_uid.encode()
+    mail_uids_str = mail_uids_str.encode()
     copy_res = imap.uid('copy', mail_uids_str, f'"{target_folder}"')
     if copy_res[0] == 'OK':
         imap.uid('store', mail_uids_str, '+FLAGS', '\\Deleted')
