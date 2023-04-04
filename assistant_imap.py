@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('2', '3', '0')
+__version_info__ = ('2', '4', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -131,7 +131,7 @@ def get_list_folders(imap):
 def select_folder_on_server(imap, folders, from_folder):
     try:
         status, inbox = imap.select(f'"{folders[from_folder][0]}"')
-    except UnicodeEncodeError:
+    except (UnicodeEncodeError, KeyError):
         raise err.InvalidFolderNameError(f'Папка "{config.FROM_FOLDER}" не найдена') from None
     inbox_count = inbox[0].decode()
     print(f'Всего писем в папке "{from_folder}": {inbox_count}')
