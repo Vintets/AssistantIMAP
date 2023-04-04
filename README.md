@@ -8,7 +8,7 @@
 Перемещение писем между папок IMAP.
 Damn mail.Yandex
 
-Проблема:
+Проблема: <br />
 Если нужно переместить письма за определённый период в другую папку и если писем много (десятки тысяч), то перемещение превращается в задротство.
 
 ### Через web-интерфейс yandex
@@ -74,7 +74,7 @@ ONLY_COPY = True
 python3 assistant_imap.py
 ```
 
-ver 4.0.2
+ver 4.0.2 <br />
 ![Скриншот работы скрипта](https://github.com/Vintets/AssistantIMAP/raw/master/screenshots/2023-04-04_16-25-41_screenshot_1.png)
 
 ## License
