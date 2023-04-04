@@ -25,14 +25,14 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('2', '4', '0')
+__version_info__ = ('2', '4', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
 __copyright__ = 'Copyright 2023 (c)  bitbucket.org/Vintets'
 
 
-def move_msg(imap, mail_ids, target_folder):
+def move_msg_ids(imap, mail_ids, target_folder):
     for mail_id in mail_ids:
         copy_res = imap.copy(mail_id, f'"{target_folder}"')
         if copy_res[0] == 'OK':
@@ -40,7 +40,7 @@ def move_msg(imap, mail_ids, target_folder):
     imap.expunge()
 
 
-def move_msg_uid(imap, mail_uids, target_folder):
+def move_msg_uids_by_one(imap, mail_uids, target_folder):
     for mail_uid in mail_uids:
         copy_res = imap.uid('copy', mail_uid, f'"{target_folder}"')
         if copy_res[0] == 'OK':
@@ -176,7 +176,7 @@ def move_emails(imap, uids, folders=None, from_folder=None, target_folder=None):
     logger.info(f'Запуск перемещения {len(run_uids)} писем из {from_folder} в {target_folder}')
     try:
         start_time = time.monotonic()
-        move_msg_uid(imap, run_uids, folders[target_folder][0])
+        move_msg_uids(imap, run_uids, folders[target_folder][0])
         end_time = time.monotonic()
         delta = timedelta(seconds=end_time - start_time)
     except imap.error as e:
