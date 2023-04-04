@@ -17,12 +17,6 @@ def check_version() -> None:
         raise Exception(u'Для работы требуется версия Python 3.9.7 и выше')
 
 
-def check_monitor_resolution() -> None:
-    size = (ctypes.windll.user32.GetSystemMetrics(0), ctypes.windll.user32.GetSystemMetrics(1))
-    if size not in ((3440, 1440),  (2560, 1080)):
-        raise err.UnsupportedResolutionError(size)
-
-
 def create_dirs(path_graphlog) -> None:
     if not (path_graphlog.exists() and path_graphlog.is_dir()):
         path_graphlog.mkdir()
