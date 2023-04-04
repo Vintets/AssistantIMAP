@@ -18,6 +18,7 @@ import json
 from datetime import datetime, date, timedelta, time as dt_time
 from imaplib import IMAP4_SSL
 import email
+from progress.bar import IncrementalBar
 from configs import config
 import errors as err
 from accessory import (authorship, clear_console, cprint,
@@ -25,11 +26,21 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('3', '2', '3')
+__version_info__ = ('4', '0', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
 __copyright__ = 'Copyright 2023 (c)  bitbucket.org/Vintets'
+
+
+def create_progressbar():
+    title = 'Копирование' if config.ONLY_COPY else 'Перемещение'
+    bar = IncrementalBar(title, max=len(mylist), suffix='%(index)d/%(max)d [%(percent)d%%]')
+    bar.hide_cursor = False
+    bar._hidden_cursor = False
+    bar.width = 50
+    bar.empty_fill = '·'
+    return bar
 
 
 def chunks(L, n):
@@ -42,6 +53,7 @@ def chunks(L, n):
 def move_msg_uids(imap, mail_uids, target_folder, count=500):
     """ Faster ~10 times than move by one."""
 
+    bar = create_progressbar()
     mail_uids = [x.decode() for x in mail_uids]
     for uids_part in chunks(mail_uids, count):
         uids_part_str = ','.join(uids_part)
@@ -49,6 +61,8 @@ def move_msg_uids(imap, mail_uids, target_folder, count=500):
         copy_res = imap.uid('copy', uids_part_str, f'"{target_folder}"')
         if (not config.ONLY_COPY) and copy_res[0] == 'OK':
             imap.uid('store', uids_part_str, '+FLAGS', '\\Deleted')
+        bar.next(len(uids_part))
+    bar.finish()
     if not config.ONLY_COPY:
         status, expunge = imap.expunge()
 
