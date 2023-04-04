@@ -25,7 +25,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('3', '2', '2')
+__version_info__ = ('3', '2', '3')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -39,7 +39,7 @@ def chunks(L, n):
         yield L[i:i+n]
 
 
-def move_msg_uids(imap, mail_uids, target_folder, count=500, delete_=True):
+def move_msg_uids(imap, mail_uids, target_folder, count=500):
     """ Faster ~10 times than move by one."""
 
     mail_uids = [x.decode() for x in mail_uids]
@@ -47,18 +47,19 @@ def move_msg_uids(imap, mail_uids, target_folder, count=500, delete_=True):
         uids_part_str = ','.join(uids_part)
         uids_part_str = uids_part_str.encode()
         copy_res = imap.uid('copy', uids_part_str, f'"{target_folder}"')
-        if delete_ and copy_res[0] == 'OK':
+        if (not config.ONLY_COPY) and copy_res[0] == 'OK':
             imap.uid('store', uids_part_str, '+FLAGS', '\\Deleted')
-    if delete_:
+    if not config.ONLY_COPY:
         status, expunge = imap.expunge()
 
 
 def move_msg_uids_by_one(imap, mail_uids, target_folder):
     for mail_uid in mail_uids:
         copy_res = imap.uid('copy', mail_uid, f'"{target_folder}"')
-        if copy_res[0] == 'OK':
+        if (not config.ONLY_COPY) and copy_res[0] == 'OK':
             imap.uid('store', mail_uid, '+FLAGS', '\\Deleted')
-    imap.expunge()
+    if not config.ONLY_COPY:
+        imap.expunge()
 
 
 def get_ids(imap, criterion='ALL'):
@@ -189,7 +190,7 @@ def move_emails(imap, uids, folders=None, from_folder=None, target_folder=None):
     logger.info(f'Запуск перемещения {len(run_uids)} писем из {from_folder} в {target_folder}')
     try:
         start_time = time.monotonic()
-        move_msg_uids(imap, run_uids, folders[target_folder][0], delete_=True)
+        move_msg_uids(imap, run_uids, folders[target_folder][0])
         end_time = time.monotonic()
         delta = timedelta(seconds=end_time - start_time)
     except imap.error as e:
