@@ -65,9 +65,9 @@ def move_msg_uids(imap, mail_uids, target_folder, count=500):
     for uids_part in chunks(mail_uids, count):
         uids_part_str = ','.join(uids_part)
         uids_part_str = uids_part_str.encode()
-        # copy_res = imap.uid('copy', uids_part_str, f'"{target_folder}"')
-        # if (not config.ONLY_COPY) and copy_res[0] == 'OK':
-            # imap.uid('store', uids_part_str, '+FLAGS', '\\Deleted')
+        copy_res = imap.uid('copy', uids_part_str, f'"{target_folder}"')
+        if (not config.ONLY_COPY) and copy_res[0] == 'OK':
+            imap.uid('store', uids_part_str, '+FLAGS', '\\Deleted')
         bar.next(len(uids_part))
     bar.finish()
     if not config.ONLY_COPY:
