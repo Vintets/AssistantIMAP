@@ -26,7 +26,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('4', '0', '3')
+__version_info__ = ('4', '0', '4')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -60,7 +60,7 @@ def chunks(seq, n):
 def move_msg_uids(imap, mail_uids, target_folder, count=500):
     """ Faster ~10 times than move by one."""
 
-    bar = create_progressbar(max=len(mail_uids))
+    bar = create_progressbar(max_=len(mail_uids))
     mail_uids = [x.decode() for x in mail_uids]
     for uids_part in chunks(mail_uids, count):
         uids_part_str = ','.join(uids_part)
