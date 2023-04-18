@@ -26,7 +26,7 @@ from accessory import (authorship, clear_console, cprint,
                        logger, imap_utf7)
 
 
-__version_info__ = ('4', '0', '4')
+__version_info__ = ('4', '0', '5')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -217,7 +217,11 @@ def move_emails(imap, uids, folders=None, from_folder=None, target_folder=None):
     except imap.error as e:
         raise err.MoveEmailsError(f'Ошибка {title_operation()[1]} {e}') from None
     else:
-        logger.success(f'Письма успешно {title_operation()[2]} за время {delta}')
+        round_delta = str(delta)
+        pos_dot = round_delta.find('.')
+        if pos_dot != -1:
+            round_delta = round_delta[:pos_dot+4]
+        logger.success(f'Письма успешно {title_operation()[2]} за время {round_delta}')
 
 
 def imap_session(imap,
