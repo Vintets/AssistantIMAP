@@ -1,17 +1,17 @@
 
 # расположение
 #WIN#
-cd /d %YandexDisk%\_Projects\AssistantIMAP
+cd /d %YandexDisk%\_Projects_Py\AssistantIMAP
 
 # запуск
-python3 %YandexDisk%\_Projects\AssistantIMAP\assistant_imap.py
+python3 %YandexDisk%\_Projects_Py\AssistantIMAP\assistant_imap.py
 
 
 # ==================================================================================================
             *** Git ***
 
 Проект AssistantIMAP
-    cd "$YandexDisk/_Projects/AssistantIMAP"
+    cd "$YandexDisk/_Projects_Py/AssistantIMAP"
     git remote add origin git@bitbucket.org:Vintets/assistantimap.git
     git remote set-url origin --add git@github.com:Vintets/AssistantIMAP.git
 
@@ -23,11 +23,11 @@ python3 %YandexDisk%\_Projects\AssistantIMAP\assistant_imap.py
 # ==================================================================================================
             *** flake8 ***
 
-cd /d %YandexDisk%\_Projects\AssistantIMAP
+cd /d %YandexDisk%\_Projects_Py\AssistantIMAP
 
 flake8
 flake8 assistant_imap.py
-flake8 D:\YandexDisk\_Projects\AssistantIMAP\assistant_imap.py
+flake8 D:\YandexDisk\_Projects_Py\AssistantIMAP\assistant_imap.py
 
 # noqa
 
