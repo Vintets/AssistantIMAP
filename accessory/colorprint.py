@@ -3,8 +3,8 @@
 
 # from __future__ import print_function
 import os
-import sys
 import re
+import sys
 PLATFORM = sys.platform
 if PLATFORM == 'win32':
     from ctypes import windll
@@ -31,9 +31,9 @@ def _pr(cstr, force_linux=False):
         sys.stdout.flush()
 
 
-def _restore_colors(e=''):
+def _restore_colors(end=''):
     # sys.stdout.write(_set_color(20) + '')
-    print(_set_color(20) + '', end=e)
+    print(_set_color(20) + '', end=end)
     sys.stdout.flush()
 
 
