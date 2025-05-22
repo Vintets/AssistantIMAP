@@ -39,7 +39,7 @@ def _restore_colors(end=''):
 
 def cprint(cstr, end='\n', force_linux=False):
     _pr(cstr, force_linux=force_linux)
-    _restore_colors(e=end)
+    _restore_colors(end=end)
 
 
 # def cprint2(cstr, force_linux=False):

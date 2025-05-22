@@ -26,7 +26,7 @@ import errors as err
 from progress.bar import IncrementalBar
 
 
-__version_info__ = ('4', '2', '0')
+__version_info__ = ('4', '2', '1')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
