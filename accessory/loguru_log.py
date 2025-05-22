@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 
 import sys
-from configs.config import PATH_LOGS, LOGGER_NAME_MODULE
+
+try:
+    from configs.config import PATH_LOGS, LOGGER_NAME_MODULE, LOGGER_PREFIX
+except ModuleNotFoundError:
+    from pathlib import Path
+
+    PATH_LOGS = Path('.')
+    LOGGER_PREFIX = 'test'
+    LOGGER_NAME_MODULE = True
 from loguru import logger
 
 
-FILENAME_LOG_MAIN = PATH_LOGS / 'monitoring_{time:YYYY-MM-DD}.log'
-FILENAME_LOG_ERR = PATH_LOGS / 'monitoring_error_{time:YYYY-MM-DD}.log'
+FILENAME_LOG_MAIN = PATH_LOGS / f'{LOGGER_PREFIX}_{{time:YYYY-MM-DD}}.log'
+FILENAME_LOG_ERR = PATH_LOGS / f'{LOGGER_PREFIX}_error_{{time:YYYY-MM-DD}}.log'
 
 
 # исправление цвета INFO на windows с серой консолью
@@ -23,8 +31,16 @@ new_format = '<light-blue>{time:YYYY-MM-DD HH:mm:ss.SSS}</light-blue> | <lvl>{le
 logger.add(sys.stdout, format=new_format)
 
 # добавляем логгеры с дефолтным форматированием для вывода в файлы
-logger.add(FILENAME_LOG_MAIN, filter=lambda record: record['level'].no <= 30, rotation='00:00', compression='zip')
-logger.add(FILENAME_LOG_ERR, filter=lambda record: record['level'].no >= 30, rotation='00:00', compression='zip')
+logger.add(FILENAME_LOG_MAIN,
+           filter=lambda record: record['level'].no <= 30,
+           rotation='00:00',
+           compression='zip',
+           delay=True)
+logger.add(FILENAME_LOG_ERR,
+           filter=lambda record: record['level'].no >= 30,
+           rotation='00:00',
+           compression='zip',
+           delay=True)
 
 
 def exemples() -> None:
@@ -47,4 +63,10 @@ def create_dir_log() -> None:
 create_dir_log()
 
 if __name__ == '__main__':
+    import os
+    width = 120
+    hight = 50
+    # os.system('color 71')
+    os.system('mode con cols=%d lines=%d' % (width, hight))
+    os.system('powershell -command "&{$H=get-host;$W=$H.ui.rawui;$B=$W.buffersize;$B.width=%d;$B.height=%d;$W.buffersize=$B;}"' % (width, 4000))
     exemples()

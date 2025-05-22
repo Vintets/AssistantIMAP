@@ -16,3 +16,4 @@ LOGGER_NAME_MODULE = True
 EXCEPTION_TRACE = False
 
 PATH_LOGS = Path('logs')
+LOGGER_PREFIX = 'AssistantIMAP'
