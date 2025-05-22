@@ -11,22 +11,22 @@
 # for python 3.9.7 and over
 """
 
-import sys
-import os
-import time
-import json  # noqa: F401
 from datetime import datetime, timedelta
-from imaplib import IMAP4_SSL
 import email
-from progress.bar import IncrementalBar
+from imaplib import IMAP4_SSL
+import json  # noqa: F401
+import os
+import sys
+import time
+
+from accessory import (authorship, check_version, clear_console, cprint,
+                       exit_from_program, imap_utf7, logger)
 from configs import config
 import errors as err
-from accessory import (authorship, clear_console, cprint,
-                       check_version, exit_from_program,
-                       logger, imap_utf7)
+from progress.bar import IncrementalBar
 
 
-__version_info__ = ('4', '1', '2')
+__version_info__ = ('4', '2', '0')
 __version__ = '.'.join(__version_info__)
 __author__ = 'master by Vint'
 __title__ = '--- AssistantIMAP ---'
@@ -42,25 +42,25 @@ def title_operation():
 
 
 def create_progressbar(max_=0):
-    bar = IncrementalBar(title_operation()[0], max=max_, suffix='%(index)d/%(max)d [%(percent)d%%]')
-    bar.hide_cursor = False
-    bar._hidden_cursor = False
-    bar.width = 50
-    bar.empty_fill = '·'
-    return bar
+    pbar = IncrementalBar(title_operation()[0], max=max_, suffix='%(index)d/%(max)d [%(percent)d%%]')
+    pbar.hide_cursor = False
+    pbar._hidden_cursor = False
+    pbar.width = 50
+    pbar.empty_fill = '·'
+    return pbar
 
 
-def chunks(seq, n):
+def chunks(seq, count):
     """ Yield successive n-sized chunks from L."""
 
-    for i in range(0, len(seq), n):
-        yield seq[i:i + n]
+    for i in range(0, len(seq), count):
+        yield seq[i:i + count]
 
 
 def move_msg_uids(imap, mail_uids, target_folder, count=500):
     """ Faster ~10 times than move by one."""
 
-    bar = create_progressbar(max_=len(mail_uids))
+    pbar = create_progressbar(max_=len(mail_uids))
     mail_uids = [x.decode() for x in mail_uids]
     for uids_part in chunks(mail_uids, count):
         uids_part_str = ','.join(uids_part)
@@ -68,8 +68,8 @@ def move_msg_uids(imap, mail_uids, target_folder, count=500):
         copy_res = imap.uid('copy', uids_part_str, f'"{target_folder}"')
         if (not config.ONLY_COPY) and copy_res[0] == 'OK':
             imap.uid('store', uids_part_str, '+FLAGS', '\\Deleted')
-        bar.next(len(uids_part))
-    bar.finish()
+        pbar.next(len(uids_part))
+    pbar.finish()
     if not config.ONLY_COPY:
         status, expunge = imap.expunge()
 
@@ -220,7 +220,7 @@ def move_emails(imap, uids, folders=None, from_folder=None, target_folder=None):
         round_delta = str(delta)
         pos_dot = round_delta.find('.')
         if pos_dot != -1:
-            round_delta = round_delta[:pos_dot+4]
+            round_delta = round_delta[:pos_dot + 4]
         logger.success(f'Письма успешно {title_operation()[2]} за время {round_delta}')
 
 

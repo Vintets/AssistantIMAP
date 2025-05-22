@@ -1,6 +1,7 @@
 import os
-from accessory import cprint
 from typing import Optional
+
+from accessory import cprint
 
 
 class ParseStrDateError(Exception):
